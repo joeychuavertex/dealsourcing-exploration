@@ -74,12 +74,11 @@ st.metric(label="Count", value=combined_count)
 st.dataframe(data)
 
 
-st.header("Same Companies")
 data_same = pd.concat([pitchbook, tracxn, preqin])
 
 data_exact = data_same[data_same.duplicated('Company', keep=False)]
 data_exact.sort_values('Company', ascending=True, inplace=True)
-st.header("Combined")
+st.header("Same Companies")
 samedata_count = len(data_exact)
 st.metric(label="Count", value=samedata_count)
 st.dataframe(data_exact)
