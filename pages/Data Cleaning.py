@@ -66,7 +66,25 @@ st.header("Preqin")
 st.metric(label="Count", value=preqin_count)
 st.dataframe(preqin)
 
-data = pd.concat([pitchbook, tracxn, preqin])
+dealroom = pd.read_csv("dealroom.csv")
+dealroom['source'] = 'dealroom'
+dealroom.sort_values(by=['r.year'])
+dealroom = dealroom[['name', 'source', 'r.year', 'r.roundKind', 'headquarterCountry']]
+dealroom.rename(columns={
+    "name": "Company",
+    "source": "Source",
+    "r.year": "Last Financing Date",
+    "r.roundKind": "Last Financing Deal Type",
+    "headquarterCountry": "Location"
+}, inplace=True)
+dealroom = dealroom.drop_duplicates(subset=['Company'], keep='last')
+dealroom_count = len(dealroom)
+st.header("Dealroom")
+st.metric(label="Count", value=dealroom_count)
+st.dataframe(dealroom)
+
+
+data = pd.concat([pitchbook, tracxn, preqin, dealroom])
 data.sort_values('Company', ascending=True, inplace=True)
 combined_count = len(data)
 st.header("Combined")
@@ -74,7 +92,7 @@ st.metric(label="Count", value=combined_count)
 st.dataframe(data)
 
 
-data_same = pd.concat([pitchbook, tracxn, preqin])
+data_same = pd.concat([pitchbook, tracxn, preqin, dealroom])
 
 data_exact = data_same[data_same.duplicated('Company', keep=False)]
 data_exact.sort_values('Company', ascending=True, inplace=True)
