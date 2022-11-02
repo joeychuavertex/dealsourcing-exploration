@@ -98,5 +98,9 @@ data_exact = data_same[data_same.duplicated('Company', keep=False)]
 data_exact.sort_values('Company', ascending=True, inplace=True)
 st.header("Same Companies")
 samedata_count = len(data_exact)
-st.metric(label="Count", value=samedata_count)
+samecompany_count = len(data_exact.drop_duplicates(subset=['Company'], keep='last'))
+
+count, unique = st.columns(2)
+count.metric(label="Total Same Companies Count", value=samedata_count)
+unique.metric(label="Unique Companies Count", value=samecompany_count)
 st.dataframe(data_exact)
